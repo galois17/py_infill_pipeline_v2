@@ -24,7 +24,7 @@ readr, pso, pryr, yaml, nat.utils, openssl
 ## How to run
 
 ```
-CONFIG_FILE=/paht/to/config.yaml python runner_DP780.py
+CONFIG_FILE=/path/to/config.yaml python runner_DP780.py
 ```
 
 Sample config.yaml file:
