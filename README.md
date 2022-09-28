@@ -1,14 +1,20 @@
 
 # Infill Pipeline
 
-This project is a for budgeted multi-objective simulation optimization using a Kriging-based infill algorithm.
-The infill algorithm searches sequentially for infill points in the parameters space until the budget is exhausted.
+This project is a for budgeted multi-objective simulation optimization using a Kriging-based infill algorithm for identification of
+crystal plasticity model parameters.
 
 
 ## Setup environment
 
+The application utilizes Python and R. There are packages that must be installed for each:
+
 ### Requirements
-Python 3.9
+## Python 3.9
+```
+conda install --name <env_name> python=3.9
+conda activate <env_name>
+```
 
 Python packages:
 
@@ -24,13 +30,13 @@ readr, pso, pryr, yaml, nat.utils, openssl
 ## How to run
 
 ```
-CONFIG_FILE=/paht/to/config.yaml python runner_DP780.py
+CONFIG_FILE=/path/to/config.yaml python runner_DP780.py
 ```
 
 Sample config.yaml file:
 ```
 system:
-  dry_run: True
+  dry_run: False
   run_folder: '/path/to/experiments/folder'
   log_r_file: 'log_r.txt'
   sqlite_db: 'sqlite.db'
