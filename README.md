@@ -1,8 +1,8 @@
 
 # Infill Pipeline
 
-This project is a for budgeted multi-objective simulation optimization using a Kriging-based infill algorithm.
-The infill algorithm searches sequentially for infill points in the parameters space until the budget is exhausted.
+This project is a for budgeted multi-objective simulation optimization using a Kriging-based infill algorithm for identification of
+crystal plasticity model parameters.
 
 
 ## Setup environment
