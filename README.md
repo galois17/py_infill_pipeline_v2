@@ -18,7 +18,7 @@ conda activate <env_name>
 
 Python packages:
 
-yaml, numpy, pandas, sklearn, pickle5, statsmodels, matplotlib, pyfiglet, pyyaml, joblib, liquidpy, scipy
+yaml, numpy, pandas, sklearn, pickle5, statsmodels, matplotlib, pyfiglet, pyyaml, joblib, liquidpy, and scipy.
 
 ### R
 
