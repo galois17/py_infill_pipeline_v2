@@ -30,7 +30,7 @@ CONFIG_FILE=/paht/to/config.yaml python runner_DP780.py
 Sample config.yaml file:
 ```
 system:
-  dry_run: True
+  dry_run: False
   run_folder: '/path/to/experiments/folder'
   log_r_file: 'log_r.txt'
   sqlite_db: 'sqlite.db'
