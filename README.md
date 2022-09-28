@@ -8,7 +8,11 @@ crystal plasticity model parameters.
 ## Setup environment
 
 ### Requirements
-Python 3.9
+## Python 3.9
+```
+conda install --name <env_name> python=3.9
+conda activate <env_name>
+``
 
 Python packages:
 
