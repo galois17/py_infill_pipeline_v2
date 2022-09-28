@@ -22,8 +22,8 @@ import utility
 from cpm import CPM
 
 class CPMSS316L(CPM):
-    def __init__(self, run_id, run_folder, design_csv_file, design_number_of_obs, case_ids, subprocess_timeout, settings, optim):
-        super().__init__(run_id, run_folder, design_csv_file, design_number_of_obs, case_ids, subprocess_timeout, settings, optim)
+    def __init__(self, run_id, run_folder, design_csv_file, design_number_of_obs, selected_cases, case_ids, subprocess_timeout, settings, optim):
+        super().__init__(run_id, run_folder, design_csv_file, design_number_of_obs, selected_cases, case_ids, subprocess_timeout, settings, optim)
         self.name = "CPMSS316L"
         self.__num_of_vf_response_to_include = settings['num_of_vf_response_to_include']
 

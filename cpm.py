@@ -25,7 +25,7 @@ import config
 import liquid_template_helper
 
 class CPM(BlackBox):
-    def __init__(self, run_id, run_folder, design_csv_file, design_number_of_obs, case_ids, subprocess_timeout, settings, optim):
+    def __init__(self, run_id, run_folder, design_csv_file, design_number_of_obs, selected_cases, case_ids, subprocess_timeout, settings, optim):
         super().__init__()
         self.name = "CPM"
         self._run_id = run_id
@@ -39,6 +39,7 @@ class CPM(BlackBox):
         self._EPSC_output_file = settings['EPSC_output_file']
         self._design_csv_file = design_csv_file
         self._design_number_of_obs = design_number_of_obs
+        self._selected_cases = selected_cases
         self._case_ids = case_ids
         self._running_folder = settings['running_folder']
         self._case_fname = settings['case_fname']
@@ -47,6 +48,7 @@ class CPM(BlackBox):
         self._info_fname = settings['info_fname']
         self._pickle_folder = settings['pickle_folder']
         self._subprocess_timeout = subprocess_timeout
+        self._infill_run_folder_name = 'infill'
         self.optim = optim
 
     def setup(self, should_rerun_epsc_copy=True, should_refit_exp_data=True):
@@ -66,25 +68,20 @@ class CPM(BlackBox):
         if not os.path.isdir(folder):
             raise Exception('EPSC folder does not exist')
 
-        design_init_file = os.path.join(
-            self._run_folder, self._design_csv_file)
-    
-        #design_init_df = utility.read_entire_csv(design_init_file)
-        #utility.log('Got pandas dataframe from design csv')
-        #row_count = design_init_df.shape[0]
-
         row_count = self._design_number_of_obs
         
-        #design_init_df.rename(
-        #    columns={'Unnamed: 0': 'infill_id'}, inplace=True)
         # Copy contents from EPSC folder
-        for j in range(0, len(self._case_ids)):
+        lowest_valid_case = self._selected_cases[0]
+
+        for j in range(0, len(self._selected_cases)):
+            case_id = self._selected_cases[j]
+            
             copy_source = os.path.join(
-                self._run_folder, self._EPSC_source_folder, str(self._case_ids[j]))
+                self._run_folder, self._EPSC_source_folder, str(case_id))
             copy_dest = os.path.join(
-                self._run_folder, self._running_folder, str(1))
+                self._run_folder, self._running_folder, str(lowest_valid_case))
             copy_dest_deep = os.path.join(
-                self._run_folder, self._running_folder, str(1), str(j+1))
+                self._run_folder, self._running_folder, str(lowest_valid_case), str(case_id))
             
             if not os.path.exists(copy_dest):
                 os.makedirs(copy_dest, exist_ok=True)
@@ -93,6 +90,7 @@ class CPM(BlackBox):
             shutil.copytree(copy_source, copy_dest_deep, dirs_exist_ok=True)
     
         def copy_runs(j):
+            """ Make copies of the first design point """
             copy_source = os.path.join(
                 self._run_folder, self._running_folder, str(1))
             copy_dest = os.path.join(
@@ -103,9 +101,6 @@ class CPM(BlackBox):
         results = Parallel(
             n_jobs=utility.get_n_jobs(), backend="threading")(map(delayed(copy_runs), range(2, row_count+1)))
 
-        case_fname = config.data_loaded['cpm']['case_fname']
-        path_to_case_fname = os.path.join(config.data_loaded['system']['run_folder'], *case_fname)
-        self.__case_fname_as_df = pd.read_csv(path_to_case_fname)
     
     def join_fixed_values_to_design(self, design):
         """ Join fixed values to the design if there any.
@@ -206,40 +201,46 @@ class CPM(BlackBox):
         if infill_id:
             infill_id_str = str(int(infill_id))
 
-        # Write template file location
-        folder = None
-        if cluster_job_id is None:
-            if not is_initial_design_point:
-                folder = os.path.join(self._run_folder, self._running_folder, 'infill')
+        # Write template to the proper file location
+        base_folder = None
+        for j in range(0, len(self._selected_cases)):
+            case_id = self._selected_cases[j]
+            folder = None    
+            if cluster_job_id is None:
+                if not is_initial_design_point:
+                    base_folder = os.path.join(self._run_folder, self._running_folder, self._infill_run_folder_name)
+                    folder = os.path.join(base_folder, str(case_id))
+                else:
+                    base_folder = os.path.join(self._run_folder, self._running_folder, infill_id_str)
+                    folder = os.path.join(base_folder, str(case_id))
+                # Copy the EPSC source to the folder
+                copy_source = os.path.join(
+                    self._run_folder, self._EPSC_source_folder, str(case_id))
             else:
-                folder = os.path.join(self._run_folder, self._running_folder, infill_id_str)
-            # Copy the EPSC source to the folder
-            copy_source = os.path.join(
-                self._run_folder, self._EPSC_source_folder)
-        else:
-            folder = os.path.join(self._run_folder, self._running_folder, cluster_job_id)
-            # Copy the EPSC source to the folder
-            copy_source = os.path.join(
-                self._run_folder, self._EPSC_source_folder)
+                base_folder = os.path.join(self._run_folder, self._running_folder, cluster_job_id) 
+                folder = os.path.join(base_folder, str(case_id))
+                # Copy the EPSC source to the folder
+                copy_source = os.path.join(
+                    self._run_folder, self._EPSC_source_folder, str(case_id))
         
-        # Create 'infill' or custom cluster_job_id folder to run EPSC apps in
-        # TODO: clean this up
-        if not os.path.exists(folder):
-            os.makedirs(folder, exist_ok=True)
-        shutil.copytree(copy_source, folder, dirs_exist_ok=True)
+            # Create 'infill' or custom cluster_job_id folder to run EPSC apps in
+            # TODO: clean this up
+            if not os.path.exists(folder):
+                os.makedirs(folder, exist_ok=True)
+            shutil.copytree(copy_source, folder, dirs_exist_ok=True)
 
         #####################
         num_responses = len(self._case_ids)
 
         # Collect the valid case folders
         collect_valid_folders = []
-        for name in os.listdir(folder):
+        for name in os.listdir(base_folder):
             if not name.startswith('.'):
                 # Drill into the RunningFolder/, RunningFolder/infill or RunningFolder/{cluster_job_id}
                 full_path = None
                 if cluster_job_id is None:
                     if not is_initial_design_point:
-                        full_path = os.path.join(self._run_folder, self._running_folder, 'infill', name)
+                        full_path = os.path.join(self._run_folder, self._running_folder, self._infill_run_folder_name, name)
                     else:
                         full_path = os.path.join(self._run_folder, self._running_folder, infill_id_str, name)
                 else:
@@ -252,7 +253,7 @@ class CPM(BlackBox):
             param_for_parallel = map(lambda x: (full_design, x, cluster_job_id), collect_valid_folders)
         else:
             if not is_initial_design_point:
-                loc = "infill"
+                loc = self._infill_run_folder_name
             else:
                 loc = infill_id_str
             param_for_parallel = map(lambda x: (full_design, x, loc), collect_valid_folders)
@@ -281,7 +282,7 @@ class CPM(BlackBox):
         utility.log(str(response))
         return response, responses_dict
 
-    def write_out_dps_xfile_and_execute(self, param, name="infill"):
+    def write_out_dps_xfile_and_execute(self, param):
         """ Write out the DPS xFiles and then execute the EPSC app 
         Args:
             param: tuple (design, case_folder)
@@ -289,14 +290,16 @@ class CPM(BlackBox):
 
         """
         full_design = param[0]
-        case_folder = param[1]
-        name = ""
+        case_folder = param[1]        
         if param[2]:
             name = param[2]
+        else:
+            name = ""
 
         # Write to each folder
         for j in range(0, len(self._param_fname_template)):
             t = self._param_fname_template[j]
+            # Get the liquid template file
             template = os.path.join(self._run_folder, t)
             file_name_out = self._param_fname[j]
             ret = self.write_dps_xfile(template, full_design)

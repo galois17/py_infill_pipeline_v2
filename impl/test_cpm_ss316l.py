@@ -15,6 +15,7 @@ class TestCPMSS316L(unittest.TestCase):
         self.inst = CPMSS316L(123, config.data_loaded['system']['run_folder'],
                               config.data_loaded['infill']['r_design_init_out_file'],
                               config.data_loaded['infill']['design_num_obs'],
+                              config.data_loaded['infill']['selected_cases'],
                               config.data_loaded['infill']['case_ids'],
                               config.data_loaded['system']['subprocess_timeout'],
                               config.data_loaded['cpm'],
