@@ -12,7 +12,7 @@ crystal plasticity model parameters.
 ```
 conda install --name <env_name> python=3.9
 conda activate <env_name>
-``
+```
 
 Python packages:
 
