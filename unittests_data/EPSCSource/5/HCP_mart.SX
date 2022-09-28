@@ -1,0 +1,112 @@
+*Material: hcp martensite
+HEXAGONAL                                crysym
+1.  1.  1.58     90.  90.  120.         cdim(i),cang(i) (Steinle-Neumann and Lars Stixrude)
+*Elastic stiffness of single crystal [MPa] of hcp martensite from austenite (Pronk and Frenkel)
+   2.687e+05   1.286e+05   7.767e+04   0.000e+00   0.000e+00   0.000e+00
+   1.286e+05   2.687e+05   7.767e+04   0.000e+00   0.000e+00   0.000e+00
+   7.767e+04   7.767e+04   3.197e+05   0.000e+00   0.000e+00   0.000e+00
+   0.000e+00   0.000e+00   0.000e+00   4.926e+04   0.000e+00   0.000e+00
+   0.000e+00   0.000e+00   0.000e+00   0.000e+00   4.926e+04   0.000e+00
+   0.000e+00   0.000e+00   0.000e+00   0.000e+00   0.000e+00   7.002e+04
+*Large elastic strain & pressure dependent Cij (kSM=0 or 1)
+ 0 
+*Thermal expansion coefficients of single crystal[K^(-1)] of Mg
+ 0.0  0.0  0.0   0.0e0   0.0e0   0.0e0
+SLIP AND TWINNING MODES
+8                               nmodesx
+1                               nmodes
+8                               mode(i)
+PRISMATIC
+  1    3   20   1    0                modex,nsmx,nrsx,isensex,itwx
+ 1  0 -1  0    -1  2 -1  0
+ 0 -1  1  0     2 -1 -1  0
+ -1  1  0  0    -1 -1  2  0
+BASAL
+  2    3   20   1    0                modex,nsmx,nrsx,isensex,itwx
+ 0  0  0  1     2 -1 -1  0
+ 0  0  0  1    -1  2 -1  0
+ 0  0  0  1    -1 -1  2  0
+PYRAMIDAL<a>
+  3    6   20   1    0                modex,nsmx,nrsx,isensex,itwx
+ 1  0 -1  1    -1  2 -1  0
+ 0 -1  1  1     2 -1 -1  0
+ -1  1  0  1    -1 -1  2  0
+ -1  0  1  1    -1  2 -1  0
+ 0  1 -1  1     2 -1 -1  0
+ 1 -1  0  1     1  1 -2  0
+PYRAMIDAL-1st order <c+a>
+  4   12   20   1    0                modex,nsmx,nrsx,isensex,itwx
+ 1  0 -1  1    -1 -1  2  3
+ 1  0 -1  1    -2  1  1  3
+ 0 -1  1  1     1  1 -2  3
+ 0 -1  1  1    -1  2 -1  3
+ -1  1  0  1     2 -1 -1  3
+ -1  1  0  1     1 -2  1  3
+ -1  0  1  1     2 -1 -1  3
+ -1  0  1  1     1  1 -2  3
+ 0  1 -1  1    -1 -1  2  3
+ 0  1 -1  1     1 -2  1  3
+ 1 -1  0  1    -2  1  1  3
+ 1 -1  0  1    -1  2 -1  3
+ PYRAMIDAL-2nd order <c+a>
+  5   6   20   1     0                modex,nsmx,nrsx,isensex,itwx
+ 2 -1 -1  2     2 -1 -1 -3
+ 1  1 -2  2     1  1 -2 -3
+ -1  2 -1  2    -1  2 -1 -3
+ -2  1  1  2    -2  1  1 -3
+ -1 -1  2  2    -1 -1  2 -3
+ 1 -2  1  2     1 -2  1 -3
+TENSILE TWINNING (TT1)
+  6    6   20   1     1               modex,nsmx,nrsx,isensex,itwx
+  0.144   0    0.2  1.00              twshx,isectw,thres1,thres2
+ 1  0 -1  2    -1  0  1  1
+ 0  1 -1  2     0 -1  1  1
+ -1  1  0  2     1 -1  0  1
+ -1  0  1  2     1  0 -1  1
+ 0 -1  1  2     0  1 -1  1
+ 1 -1  0  2    -1  1  0  1
+COMPRESSIVE TWINNING (CT1)
+  7    6   20   1     1               modex,nsmx,nrsx,isensex,itwx
+  0.1367	 1  0.16  1.00		      twshx,isectw,thres1,thres2
+ 2 -1 -1  2     2 -1 -1 -3
+ 1  1 -2  2     1  1 -2 -3
+ -1  2 -1  2    -1  2 -1 -3
+ -2  1  1  2    -2  1  1 -3
+ -1 -1  2  2    -1 -1  2 -3
+ 1 -2  1  2     1 -2  1 -3
+PHASE TRANSFROMATION 
+  8    18   20   1     0               modex,nsmx,nrsx,isensex,itwx
+ 0  1 -1  1    0 -1  1  2
+ 0  1 -1  1    5 -1 -4 -3
+ 0  1 -1  1   -5  4  1 -3
+ 1  0 -1  1   -1  0  1  2
+ 1  0 -1  1   -1  5 -4 -3
+ 1  0 -1  1    4 -5  1 -3 
+ 1 -1  0  1   -1  1  0  2
+ 1 -1  0  1    4  1 -5 -3
+ 1 -1  0  1   -1 -4  5 -3
+ 0 -1  1  1    0  1 -1  2
+ 0 -1  1  1    5 -4 -1 -3
+ 0 -1  1  1   -5  1  4 -3
+-1  0  1  1    1  0 -1  2
+-1  0  1  1   -4  5 -1 -3
+-1  0  1  1    1 -5  4 -3
+-1  1  0  1    1 -1  0  2 
+-1  1  0  1   -4 -1  5 -3
+-1  1  0  1    1  4 -5 -3
+DISLOCATION MODEL
+ 1 									!iDiag (diagonalize hd matrix)   
+ 0.11  4.0  38.0                     !INTERACTION CONSTANT, Q IN EQ. (3.14), grain size
+Phase transformation---------------------------------------------------------------------------------------------
+1.4652e-10  1e6                !BURG (m), NORM ACTENER g IN EQ. (3.12) (0.00375)
+ 0.20466e+08   100.0 			   !K1 IN EQ. (3.8) (1/m), DRAG STRESS-D IN EQ. (3.12) (MPa) 
+ 1.E+07                             !EDOT_0 IN EQ. (3.12)
+ 1.0E+0 1.0E-1                 !INITIAL RHO_S (1/m^2), INITIAL RHO_DEB FOR EACH SLIP MODE (1/m^2)
+800.0  0.0283  500.0     !A,B,C FOR ATHERMAL TAU = A + B * EXP(-TEMP/C) EQ. (3.17) 
+ 0. 0. 0.0                 		  !FOR HPFAC COEF FOR THIS SLIP MODE FOR GRAIN BOUNDARY,TWIN1,TWIN2
+  0.0 0. 30.  0.0                    !Q0,Q1,Q2, Q3 (K) FOR A IN EQ. (3.15) Q0+Q1*LOG(1+TEMP/Q2)
+ 0.0 0.5						   ! rev parameter, m	
+0								 !iFCC
+1.0 0.0  					 !latent hardening - 1st mode (strength)
+1.0 0.0                     !latent  - 1st mode (disloc dens)
+1.0 1.0

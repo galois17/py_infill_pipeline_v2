@@ -1,0 +1,14 @@
+# Shifting, 0 - no shifting, non-zero - specifies the amount of shifting, 
+# third value - specifies number of shifting increments
+fitting_strategies: [0, -0.01, 0, 21]
+# Saving data
+save_data: True
+# Plot final fit, 0 - no plotting, 1 - plot in 1 figure, 2 - plot separately
+plot_final_fit:  0
+model:
+  num_of_param_files: 4
+  param_files: ['FCC_aust.sx', 'HCP_mart.SX', 'BCC_mart.sx', 'phtr.in']
+  
+slurm:
+  # in GB 
+  memory: 1

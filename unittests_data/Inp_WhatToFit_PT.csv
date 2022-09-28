@@ -1,0 +1,10 @@
+CaseNo,FilePath,CaseIdentifier,SimOut,Column_x,Column_y,Start,End,Dataset,DatasetIdentifier,PlotFigure,IsCyclic,IsPF,PFRange,PFFileName,FittingWeight,description
+1,FittingDataFiles/SR1_1e_3.txt,SR1_1e_3,output 1.out,1,7,0,4.80E-02,1,PT,1,0,0,0,TEX0001.OUT,1,SR1_1e_3
+2,FittingDataFiles/SR2_1e_4.txt,SR2_1e_4,output 1.out,1,7,0.048,9.30E-02,1,PT,2,0,0,0,TEX0001.OUT,1,SR2_1e_4
+3,FittingDataFiles/SR3_1e_2.txt,SR3_1e_2,output 1.out,1,7,0.093,1.37E-01,1,PT,3,0,0,0,TEX0001.OUT,1,SR3_1e_2
+4,FittingDataFiles/SR4_5e_3.txt,SR4_5e_3,output 1.out,1,7,0.137,1.78E-01,1,PT,4,0,0,0,TEX0001.OUT,1,SR4_5e_3
+5,FittingDataFiles/SR5_1e_1.txt,SR5_1e_1,output 1.out,1,7,0.178,4.00E-01,1,PT,5,0,0,0,TEX0001.OUT,1,SR5_1e_1
+6,FittingDataFiles/SS_n15.txt,Tempn15,output 1.out,1,7,0,5.50E-01,1,PT,6,0,0,0,TEX0001.OUT,1,Tempn15
+7,FittingDataFiles/SS_0.txt,Temp0,output 1.out,1,7,0,5.50E-01,1,PT,7,0,0,0,TEX0001.OUT,1,Temp0
+8,FittingDataFiles/SS_10.txt,Temp10,output 1.out,1,7,0,5.50E-01,1,PT,8,0,0,0,TEX0001.OUT,1,Temp10
+9,FittingDataFiles/SS_20.txt,Temp20,output 1.out,1,7,0,5.50E-01,1,PT,9,0,0,0,TEX0001.OUT,1,Temp20

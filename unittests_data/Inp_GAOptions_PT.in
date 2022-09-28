@@ -1,0 +1,24 @@
+**Genetic Algorithm Information/Option
+*Specify the type of solver, ga or gamultiobj
+gamultiobj
+*List of MATLAB GA options, '+' is parameter for the option, '>' is parameter for function handle
+FunctionTolerance
++0.01
+MaxGenerations
++20
+MaxStallGenerations
++5
+PopulationSize
++190
+ParetoFraction
++0.35
+Display
++iter
+UseVectorized
++true
+PlotFcn
+{@gaplotpareto,@gaplotscorediversity,@gaplotrankhist,@gaplotstopping,@gaparallelVar}
+DistanceMeasureFcn
+@distancecrowding
+>genotype
+*End, leave this line as end of file 
