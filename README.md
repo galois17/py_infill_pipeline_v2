@@ -7,6 +7,8 @@ crystal plasticity model parameters.
 
 ## Setup environment
 
+The application utilizes Python and R. There are packages that must be installed for each:
+
 ### Requirements
 ## Python 3.9
 ```
