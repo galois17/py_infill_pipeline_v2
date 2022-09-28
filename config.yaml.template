@@ -1,0 +1,55 @@
+system:
+  should_run_batch: True
+  rerun_batch: True
+  dry_run: False
+  run_folder: <<<ABSOLUTE_PATH_TO_RUN_FOLDER>>>
+  log_r_file: 'log_r.txt'
+  sqlite_db: 'sqlite.db'
+  # Timeout in seconds
+  subprocess_timeout: 1200
+
+infill:
+  budget: 3
+  selected_cases: [1,2,3,4,5,6,7,8,9]
+  case_ids: [1,2,3,4,5,6,7,8,9]
+  alg: 'pso'
+  method: 'sms'
+  maxit: 20
+  design_num_obs: 150
+  # Number of params that will be searched in the parameter space,
+  # so this must not include fixed parameters. A fixed
+  # parameter should be defined in 'lower' and 'upper' with
+  # the same value at index j
+  design_num_of_param: 15
+  # If more than the number of selected cases, then must implement the remaining
+  # cases or objectives programatically.
+  design_num_of_responses: 13
+  r_design_init_out_file: 'design_init.csv'
+  r_design_init_response_out_file: 'design_init_responses.csv'
+  # Relative to system.run_folder
+  infill_out_file: 'infill_out.csv'
+  infill_lock_file: 'infill_out.lock'
+  rerun_design_matrix: True
+
+cpm:
+  lower: [0.9, 1e8,  0.1, 1e2, 100,  0.01,  200, 1e8, 0.05, 2e2, 100, 0.000, 1e6, 5, -100, 0.1, 0.1, 0.01]
+  upper: [0.9,   2e8, 0.25, 2e2, 400, 0.08,   400, 8e8,  0.4,  4e2, 500, 0.000, 1e6, 13, -60,   1, 1, 0.1]
+  param_fname: ['FCC_aust.SX', 'HCP_mart.SX', 'BCC_mart.SX', 'phtr.in']
+  param_fname_template: ['FCC_aust.SX.liquid', 'HCP_mart.SX.liquid', 'BCC_mart.SX.liquid', 'phtr.in.liquid']
+  num_of_vf_response_to_include: 4
+  # Relative to system.run_folder
+  EPSC_source_folder: 'EPSCSource'
+  # Relative to system.run_folder
+  running_folder: 'RunningFolder'
+  should_rerun_setup: False
+  # Assume that the executable produces this output file
+  EPSC_output_file: 'output 1.out'
+  EPSC_linux_executable: 'a.out'
+  # Relative to system.run_folder
+  case_fname: 'Inp_WhatToFit_PT.csv'
+  # Relative to system.run_folder
+  fit_param_fname: 'Inp_FittingParams_PT.csv'
+  recipe_fname: 'Inp_Fit_recipes_PT.in'
+  info_fname: 'Inp_Info_PT.yaml'
+  
+
