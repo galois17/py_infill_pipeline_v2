@@ -20,6 +20,11 @@ Python packages:
 
 yaml, numpy, pandas, sklearn, pickle5, statsmodels, matplotlib, pyfiglet, pyyaml, joblib, liquidpy, scipy
 
+To install packages from requirements file, run:
+```
+pip install -r requirements.txt
+```
+
 ### R
 
 R packages:
