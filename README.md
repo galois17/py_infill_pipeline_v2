@@ -20,6 +20,11 @@ Python packages:
 
 yaml, numpy, pandas, sklearn, pickle5, statsmodels, matplotlib, pyfiglet, pyyaml, joblib, liquidpy, and scipy.
 
+To install packages from requirements file, run:
+```
+pip install -r requirements.txt
+```
+
 ### R
 
 R packages:
@@ -93,11 +98,7 @@ cpm:
 An example can be found [here](https://universitysystemnh-my.sharepoint.com/:u:/g/personal/kv1033_usnh_edu/Edm_J9RclD9MrzEz0WI8mbwBIH_2S1yPRWPsa1xHXiq6_Q?e=xyyxNu) 
 ## How to run unit tests
 ```
-python -m unittest discover -v
-```
-or
-```
-pytest test_*.py -v
+coverage run -m pytest **/test_*.py -v
 ```
 
 ## Create docs
