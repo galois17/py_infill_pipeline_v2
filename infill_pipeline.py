@@ -352,7 +352,7 @@ class InfillPipeline:
                     # Skip the first 2 since they are metadeta
                     response_as_dict[f"X{j-1}"] = row[j]
                 response_as_dict["infill_id"] = row[1]
-                #import pdb; pdb.set_trace()
+                
                 assert (response is not None), "response must not be null"
                 for j in range(0, len(response)):
                     response_as_dict[f"Y{j+1}"] = response[j]

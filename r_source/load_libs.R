@@ -100,7 +100,6 @@ if (!is.installed(n)) {
 }
 library(n, character.only = TRUE)
 
-
 n = 'pryr'
 if (!is.installed(n)) {
     install.packages(n)
@@ -112,7 +111,6 @@ if (!is.installed(n)) {
     install.packages(n)
 }
 suppressPackageStartupMessages(library(n, character.only = TRUE))
-
 
 n = 'nat.utils'
 if (!is.installed(n)) {

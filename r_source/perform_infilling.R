@@ -15,7 +15,11 @@ ALG = "pso"
 METHOD = "SMS"
 MAXIT = 20
 
-R_REF_POINT = rep(0.1, NUM_CASES)
+if (is.null(config$infill$r_ref_point)) {
+    R_REF_POINT = rep(0.1, NUM_CASES)
+} else {
+    R_REF_POINT = as.numeric(config$infill$r_ref_point)
+}
 
 NUM_PARAMS = config$infill$design_num_of_param
 INFILL_OUT_FILE = config$infill$infill_out_file
@@ -38,7 +42,6 @@ obj_fun = function(x) {
     on.exit(closeAllConnections())
 
     write('Eval obj function: ', file=paste0(run_folder, '/', log_r_file), append=TRUE)
-    #write(as.character(t(x)), file=paste0(run_folder, '/', log_r_file), append=TRUE)
     write(as.character(x), file=paste0(run_folder, '/', log_r_file), append=TRUE)
     write(class(x), file=paste0(run_folder, '/', log_r_file), append=TRUE)
     write(INFILL_OUT_FILE, file=paste0(run_folder, '/', log_r_file), append=TRUE)
@@ -91,7 +94,7 @@ obj_fun = function(x) {
         if (!is.na(responses[1])) {
                 write(class(responses[1]), file=paste0(run_folder, '/', log_r_file), append=TRUE)
             
-                text = sprintf("What am I? %s", as.character(responses[1]))
+                text = sprintf("Type of response is %s", as.character(responses[1]))
                 write(text, file=paste0(run_folder, '/', log_r_file), append=TRUE)
                 break            
         }

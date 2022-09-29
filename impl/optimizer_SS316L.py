@@ -255,7 +255,7 @@ class OptimizerSS316L(OptimizerCPM):
                         x = sim_modx
                 
                 target_vf = target_vf.values.reshape((len(target_vf),1))
-                #import pdb; pdb.set_trace()
+                
                 errors[j+4] = np.sqrt(np.sum(np.square(enum_sim_vf - target_vf))/len(enum_sim_vf))
         return errors
 
