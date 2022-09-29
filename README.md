@@ -27,10 +27,10 @@ pip install -r requirements.txt
 
 ### R
 
-R packages:
+R packages that need to be installed:
 
 parallel, ggplot2, dplyr, rsm, desirability, gridExtra, GPareto, DiceDesign, R.matlab, NbClust, R6, purrr, pracma,
-readr, pso, pryr, yaml, nat.utils, openssl
+readr, pso, pryr, yaml, nat.utils, and openssl.
 
 ## How to run
 
