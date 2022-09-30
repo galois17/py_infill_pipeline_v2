@@ -16,7 +16,6 @@ class TestOptimizerDP780(unittest.TestCase):
     def test_instance(self):
         self.assertTrue(True)
 
-
     def test_read_recipe_file(self):
         self.setup()
         #read_fit_params

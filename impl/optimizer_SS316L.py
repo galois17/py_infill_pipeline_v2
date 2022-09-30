@@ -10,7 +10,6 @@ from scipy import power, arange, random, nan, interpolate
 from dataclasses import dataclass
 import yaml
 import pickle
-import traceback
 import sys
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -67,7 +66,6 @@ class OptimizerSS316L(OptimizerCPM):
         with open(os.path.join(self._run_folder, *self._info_fname), 'r') as stream:
             config_info = yaml.safe_load(stream)
         parse_info_res = self.parse_info(config_info, self.case_fname_as_df)
-        cyclic_fits = parse_info_res['cyclic_fits']
         
         if self.exp_data is None:
             self.setup_exp_data()
@@ -200,11 +198,7 @@ class OptimizerSS316L(OptimizerCPM):
         for j in range(0, cases.shape[0]):
             # Determine the case, regular cases are stress-strain curves, extended
             # cases are pole figures etc.
-            
             exp_x = self.exp_data['X'][j]
-            exp_y = self.exp_data['smoothed_Y'][j]
-            cur_fitting_weight = fitting_weight[j]
-            cur_fit_range = fit_range[j]
             #exp_y_fcn = self.exp_data['exp_y_fcn'][j]
             exp_y_fcn = self.exp_data['raw_Y'][j] 
             # Get the actual case number (1 index)
@@ -228,7 +222,6 @@ class OptimizerSS316L(OptimizerCPM):
 
             is_vf = (j >= cases.shape[0])
         
-            #err, _ = self.calc_error(exp_x, exp_y_fcn, cur_fit_range, sim_modx, sim_mody, sim_VF)
             err, _ = self.calc_error_piece_wise(exp_x, exp_y_fcn, sim_modx, sim_mody, None)
             
             errors[j] = err
@@ -249,7 +242,6 @@ class OptimizerSS316L(OptimizerCPM):
                         err_ind += 1
                         if err_ind >= num_data:
                             break
-                        #print(f"Check here: {j} err_ind {err_ind} shape {vf_exp[j-5].shape}")
                         target_strain = vf_exp[j-5].iloc[err_ind, 0]
                     else:
                         x = sim_modx
@@ -258,84 +250,6 @@ class OptimizerSS316L(OptimizerCPM):
                 
                 errors[j+4] = np.sqrt(np.sum(np.square(enum_sim_vf - target_vf))/len(enum_sim_vf))
         return errors
-
-    def calc_error(self, exp_x, exp_fcn, fit_range, sim_modx, sim_mody, sim_VF, is_vf_case=False):
-        """ Calculate the error 
-
-        Args:
-        Returns:
-            error and number of elements as a tuple
-        """
-        err = -1
-        try:
-            if fit_range[0] < fit_range[1]:
-                start_x = max([fit_range[0], exp_x[0], sim_modx[0]])
-                iter = 0
-                
-                val = np.inf
-                if sim_mody[iter] != 0:
-                    val = exp_fcn(sim_modx[iter])/np.float64(sim_mody[iter])
-
-                while sim_modx[iter] < start_x or val < 0:
-                    iter += 1
-                    if iter >= len(sim_modx):
-                        break
-                start_x = iter
-
-                end_x = min([fit_range[1], exp_x[-1], sim_modx[-1]])
-                iter = len(sim_modx)-1
-
-                val = np.inf
-                if sim_mody[iter] != 0:
-                    val = exp_fcn(sim_modx[iter])/sim_mody[iter]
-                while sim_modx[iter] > end_x or val < 0:
-                    iter -= 1
-                    if iter == 0:
-                        break
-                
-                end_x = iter
-            else:
-                start_x = min([fit_range[0], exp_x[0], sim_modx[0]])
-                iter = 0
-
-                val = np.inf
-                if sim_mody[iter] != 0:
-                    val = exp_fcn(sim_modx[iter])/sim_mody[iter]
-                while sim_modx[iter] > start_x or val < 0:
-                    iter += 1
-                    if iter >= len(sim_modx):
-                        break
-                start_x = iter
-                    
-                end_x = max([fit_range[1], exp_x[-1], sim_modx[-1]])
-                iter = len(sim_modx)-1
-
-                val = np.inf
-                if sim_mody[iter] != 0:
-                    val = exp_fcn(sim_modx[iter])/sim_mody[iter]
-                while sim_modx[iter] < end_x or val < 0:
-                    iter -= 1
-                    if iter == 0:
-                        break              
-                end_x = iter
-            eval_x = sim_modx[start_x:(end_x+1)]
-            eval_y = sim_mody[start_x:(end_x+1)]
-            tot_n = len(eval_x)
-
-            # Error evaluation based on Tofallis, 2014
-            evaluted_exp_fcn = exp_fcn(eval_x)
-
-            if eval_y.shape[0] == 0 or evaluted_exp_fcn.shape[0] == 0:
-                return random.randint(0, 50), len(exp_x)
-
-            # Compute RMSE
-            err = np.sqrt(np.sum(np.square(eval_y - evaluted_exp_fcn))/tot_n)
-        except Exception as e:            
-            print(traceback.format_exc())
-            return random.randint(0, 50), len(exp_x)
-    
-        return err, tot_n
-
 
     def calc_error_piece_wise(self, exp_x, exp_fcn, sim_modx, sim_mody, segmentation):
         """ Calculate the error piece-wise
@@ -355,11 +269,11 @@ class OptimizerSS316L(OptimizerCPM):
                 return 1000 
             return np.sqrt(tot/tot_length)
 
-        pieces_x, pieces_sim_y, pieces_exp_y = self.__get_piecewise(sim_modx, sim_mody, exp_x, exp_fcn, segmentation)
+        pieces_x, pieces_sim_y, pieces_exp_y = self.get_piecewise(sim_modx, sim_mody, exp_x, exp_fcn, segmentation)
         if segmentation is None:
             # No cycles
             try:
-                x, y, z = self.__interpolate(0, len(sim_modx)-1, 0, len(exp_x)-1, sim_modx, sim_mody, exp_x, exp_fcn)
+                x, y, z = self.interpolate(0, len(sim_modx)-1, 0, len(exp_x)-1, sim_modx, sim_mody, exp_x, exp_fcn)
             except Exception as e:
                 return (2000+np.random.normal(0, 100)), 0
 
@@ -368,188 +282,3 @@ class OptimizerSS316L(OptimizerCPM):
             pieces_exp_y = [z]
 
         return compute_rmse_for_pieces(pieces_sim_y, pieces_exp_y), len(pieces_x)
-
-    def __get_piecewise(self, sim_modx, sim_mody, truth_x, truth_y, segmentation):
-        pieces_x = []
-        pieces_actual_x = []
-        pieces_sim_y =[]
-        pieces_exp_y = []
-        if segmentation is None:
-            segmentation = [[0, len(truth_x)]]
-        
-        #tol = 0.008
-        tol = 0.01
-        track_x = 0
-        for break_j in segmentation:
-            print("**************************")
-            print(f"Segmentation {break_j}")
-            print(f"Curent tracking at {track_x}; max length {len(sim_modx)}")
-            x1 = int(break_j[0])
-            x2 = int(break_j[1])
-            if x2 == len(truth_x):
-                x2 = x2-1
-
-            actual_exp_x1 = truth_x[x1]
-
-            if x2 >= len(truth_x):
-                actual_exp_x2 = truth_x[-1]    
-            else:
-                actual_exp_x2 = truth_x[x2]
-            max_x = max(truth_x)
-            min_x = min(truth_x)
-
-            # Find valid segments
-            all_x1 = []
-            actual_all_x1 = []
-            all_x2 = []
-            actual_all_x2 = []
-
-            found_interval = False
-            should_quit_current_segment = False
-            while track_x < len(sim_modx):
-                if found_interval or should_quit_current_segment:
-                    break
-            
-                for k in range(track_x, len(sim_modx)):
-                    if k == len(sim_modx) - 1:
-                        # Reached the end
-                        should_quit_current_segment = True
-                    
-                    if abs(sim_modx[k] - actual_exp_x1)/(max_x- min_x) <= tol:                    
-                        all_x1.append(k)
-                        actual_all_x1.append(sim_modx[k])
-                        # Find matching endpoint
-                        found_matching_endpoint = False
-                        for m in range(k, len(sim_modx)):
-                            if abs(sim_modx[m] - actual_exp_x2)/(max_x- min_x) <= tol:
-                                all_x2.append(m)
-                                actual_all_x2.append(sim_modx[m])
-                                found_matching_endpoint = True
-                                track_x = m
-                                break
-                            
-                        if not found_matching_endpoint:
-                            # Did not find a matching endpoint
-                            all_x1.pop(-1)
-                            should_quit_current_segment = True
-                            print("!! DID NOT FIND interval !! ")
-                            print("**************************")
-                            break
-                        else:
-                            found_interval = True
-                            print(f"Found complete interval: {all_x1}, {all_x2}")
-                            print("**************************")
-                            break
-
-            winner_x1 = -1
-            winner_x2 = -1
-            for i in range(len(all_x1)):
-                pick_x1 = all_x1[i]
-                pick_x2 = -1
-
-                for j in range(len(all_x2)):
-                    if all_x2[j] > pick_x1:
-                        pick_x2 = all_x2[j]
-
-                        # How much data?
-                        length = pick_x2 - pick_x1
-                        norm_length = length/len(sim_modx)
-
-                        target_length = x2-x1
-                        norm_target_length = target_length/len(truth_x)
-                        rat = abs(norm_length-norm_target_length)*100;            
-
-                        sim_x1_norm = pick_x1/len(sim_modx)
-                        sim_x2_norm = pick_x2/len(sim_modx)
-
-                        exp_x1_norm = x1/len(truth_x)
-                        exp_x2_norm = x2/len(truth_x)
-
-                        rat_x1 = abs(sim_x1_norm - exp_x1_norm)*100
-                        rat_x2 = abs(sim_x2_norm - exp_x2_norm)*100
-
-                        thresh_width_perc = 40
-                        thresh_points_perc = 40
-                        if (((truth_x[x2] > truth_x[x1]) and (sim_modx[pick_x2] > sim_modx[pick_x1])) or ((truth_x[x2] < truth_x[x1]) and (sim_modx[pick_x2] < sim_modx[pick_x1])) ) and (rat <= thresh_width_perc) and ( (rat_x1 <= thresh_points_perc) and (rat_x2 <= thresh_points_perc)  ):
-                            winner_x1 = pick_x1
-                            winner_x2 = pick_x2
-                            print("Try to interpolate...")
-                            print(f"Length of truth is {len(truth_x)}")
-                            try:
-                                new_xx, ynew, gnew = self.__interpolate(winner_x1, winner_x2, x1, x2, sim_modx, sim_mody, truth_x, truth_y, tol)
-                            except Exception as e:
-                                raise e
-                            print(f"Length of x values for interpolation is {len(new_xx)}")
-
-                            assert len(ynew) == len(gnew), "The function evaluations should have the same length."
-                            
-                            pieces_x.append(new_xx)
-                            pieces_sim_y.append(ynew)
-                            pieces_exp_y.append(gnew)
-                            
-        return pieces_x, pieces_sim_y, pieces_exp_y
-
-    def __interpolate(self, winner_x1, winner_x2, x1, x2, sim_modx, sim_mody, truth_x, truth_y, thresh=0.001):
-        xx = sim_modx[winner_x1:winner_x2]
-        yy = sim_mody[winner_x1:winner_x2]
-
-        truth_xx = truth_x[x1:x2]
-        truth_yy = truth_y[x1:x2]
-
-        end_idx = winner_x2
-        if end_idx >= len(sim_modx):
-            end_idx = -1
-        if sim_modx[winner_x2] < sim_modx[winner_x1]:
-            # reverse
-            print("Reverse the curve...")
-            xx = np.flip(xx)
-            yy = np.flip(yy)
-        
-        end_idx = x2
-        if end_idx >= len(truth_x):
-            end_idx = -1
-        
-        if truth_x[end_idx] < truth_x[x1]:
-            truth_xx = np.flip(truth_xx)
-            truth_yy = np.flip(truth_yy)
-
-        xx_unique, unique_id = np.unique(xx, return_index=True)
-        yy_unique = yy[unique_id]
-        f = scipy.interpolate.interp1d(xx_unique, yy_unique)
-
-        truth_xx_unique, unique_truth_ind = np.unique(truth_xx, return_index=True)
-        truth_yy_unique = truth_yy[unique_truth_ind]
-        g = scipy.interpolate.interp1d(truth_xx_unique, truth_yy_unique)
-
-        new_xx = []
-
-        # Find points in both
-        x_beg = 0
-        x_end = 0
-        if (xx[-1] <= truth_xx[0]) or (xx[0] >= truth_xx[-1]):            
-            raise Exception(f"This should not happen. Interval does not overlap at all: sim: [{xx[0]}, {xx[-1]}] exp: [{truth_xx[0]}, {truth_xx[-1]}]")
-        else:
-            x_beg = max(xx[0],  truth_xx[0])
-            x_end = min(xx[-1], truth_xx[-1])
-
-        print(f"x_beg={x_beg} and x_end={x_end}")
-        interp_common_x = np.linspace(x_beg, x_end, winner_x2 - winner_x1)
-
-        if x_beg > x_end:
-            return [], [], []
-
-        for i in range(len(interp_common_x)):
-            x = interp_common_x[i]
-            n_thresh = thresh*(xx[-1] - xx[0])
-            left_bound = xx[0] + n_thresh
-            right_bound = xx[-1] - n_thresh
-            
-            if x > left_bound and x < right_bound:
-                new_xx.append(x)
-    
-        ynew = f(new_xx)
-        gnew = g(new_xx)
-        
-        return new_xx, ynew, gnew
-
-

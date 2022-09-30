@@ -5,7 +5,6 @@ import yaml
 from optimizer_SS316L import OptimizerSS316L
 import pandas as pd
 
-
 class TestOptimizerSS316L(unittest.TestCase):
     def setup(self):
         with open("unittests_data/test_config.yaml", 'r') as stream:
