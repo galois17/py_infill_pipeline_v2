@@ -249,7 +249,7 @@ class OptimizerDP780(OptimizerCPM):
         pieces_x, pieces_sim_y, pieces_exp_y = self.get_piecewise(sim_modx, sim_mody, exp_x, exp_fcn, segmentation)
         if segmentation is None:
             # No cycles
-            x, y, z = self.__interpolate(0, len(sim_modx)-1, 0, len(exp_x)-1, sim_modx, sim_mody, exp_x, exp_fcn)
+            x, y, z = self.interpolate(0, len(sim_modx)-1, 0, len(exp_x)-1, sim_modx, sim_mody, exp_x, exp_fcn)
             pieces_x = [x]
             pieces_sim_y = [y]
             pieces_exp_y = [z]

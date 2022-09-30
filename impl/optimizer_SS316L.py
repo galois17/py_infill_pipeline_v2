@@ -66,7 +66,6 @@ class OptimizerSS316L(OptimizerCPM):
         with open(os.path.join(self._run_folder, *self._info_fname), 'r') as stream:
             config_info = yaml.safe_load(stream)
         parse_info_res = self.parse_info(config_info, self.case_fname_as_df)
-        cyclic_fits = parse_info_res['cyclic_fits']
         
         if self.exp_data is None:
             self.setup_exp_data()
@@ -274,7 +273,7 @@ class OptimizerSS316L(OptimizerCPM):
         if segmentation is None:
             # No cycles
             try:
-                x, y, z = self.__interpolate(0, len(sim_modx)-1, 0, len(exp_x)-1, sim_modx, sim_mody, exp_x, exp_fcn)
+                x, y, z = self.interpolate(0, len(sim_modx)-1, 0, len(exp_x)-1, sim_modx, sim_mody, exp_x, exp_fcn)
             except Exception as e:
                 return (2000+np.random.normal(0, 100)), 0
 

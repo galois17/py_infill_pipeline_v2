@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-#from typing import *
 from cmath import inf
 import traceback
 import os
@@ -13,6 +12,8 @@ from scipy.interpolate import UnivariateSpline
 from dataclasses import dataclass
 
 class OptimizerCPM:
+    """ Base CPM optimizer """
+
     def __init__(self, run_folder, case_fname, fit_param_fname, recipe_fname, info_fname):
         self.name = "Optimizer"
         self._run_folder = run_folder
@@ -74,8 +75,7 @@ class OptimizerCPM:
     def fit_curve(self, X, Y):
         """ Fit a curve
         """
-        s = UnivariateSpline(X, Y, s=30)
-        return s
+        return UnivariateSpline(X, Y, s=30)
 
     def calc_error(self, exp_x, exp_fcn, fit_range, sim_modx, sim_mody, sim_VF, is_vf_case=False):
         """ Calculate the error 
@@ -163,7 +163,6 @@ class OptimizerCPM:
         if segmentation is None:
             segmentation = [[0, len(truth_x)]]
         
-        #tol = 0.008
         tol = 0.01
         track_x = 0
         for break_j in segmentation:
@@ -275,7 +274,7 @@ class OptimizerCPM:
                             
         return pieces_x, pieces_sim_y, pieces_exp_y
 
-    def __interpolate(self, winner_x1, winner_x2, x1, x2, sim_modx, sim_mody, truth_x, truth_y, thresh=0.001):
+    def interpolate(self, winner_x1, winner_x2, x1, x2, sim_modx, sim_mody, truth_x, truth_y, thresh=0.001):
         xx = sim_modx[winner_x1:winner_x2]
         yy = sim_mody[winner_x1:winner_x2]
 
