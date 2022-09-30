@@ -11,6 +11,7 @@ The application utilizes Python and R. There are packages that must be installed
 
 ### Requirements
 ## Python 3.9
+Install Anaconda or Minconda, then setup an environment:
 ```
 conda install --name <env_name> python=3.9
 conda activate <env_name>
@@ -27,10 +28,10 @@ pip install -r requirements.txt
 
 ### R
 
-R packages:
+R packages that need to be installed:
 
 parallel, ggplot2, dplyr, rsm, desirability, gridExtra, GPareto, DiceDesign, R.matlab, NbClust, R6, purrr, pracma,
-readr, pso, pryr, yaml, nat.utils, openssl
+readr, pso, pryr, yaml, nat.utils, and openssl.
 
 ## How to run
 
@@ -95,7 +96,7 @@ cpm:
   info_fname: ['InputFiles', 'Inp_Info_DP.yaml']
   pickle_folder: 'out'
 ```
-An example can be found [here](https://universitysystemnh-my.sharepoint.com/:u:/g/personal/kv1033_usnh_edu/Edm_J9RclD9MrzEz0WI8mbwBIH_2S1yPRWPsa1xHXiq6_Q?e=xyyxNu) 
+An example can be found with the EPSC executables can be found [here](https://universitysystemnh-my.sharepoint.com/:u:/g/personal/kv1033_usnh_edu/Edm_J9RclD9MrzEz0WI8mbwBIH_2S1yPRWPsa1xHXiq6_Q?e=xyyxNu) 
 ## How to run unit tests
 ```
 coverage run -m pytest **/test_*.py -v
