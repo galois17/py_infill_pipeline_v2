@@ -96,7 +96,7 @@ cpm:
   info_fname: ['InputFiles', 'Inp_Info_DP.yaml']
   pickle_folder: 'out'
 ```
-An example can be found with the EPSC executables can be found [here](https://universitysystemnh-my.sharepoint.com/:u:/g/personal/kv1033_usnh_edu/Edm_J9RclD9MrzEz0WI8mbwBIH_2S1yPRWPsa1xHXiq6_Q?e=xyyxNu) 
+An example (dp780) with the EPSC executables can be found [here](https://universitysystemnh-my.sharepoint.com/:u:/g/personal/kv1033_usnh_edu/Edm_J9RclD9MrzEz0WI8mbwBIH_2S1yPRWPsa1xHXiq6_Q?e=xyyxNu).
 ## How to run unit tests
 ```
 coverage run -m pytest **/test_*.py -v
