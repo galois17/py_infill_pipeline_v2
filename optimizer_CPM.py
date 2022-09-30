@@ -261,7 +261,7 @@ class OptimizerCPM:
                             print("Try to interpolate...")
                             print(f"Length of truth is {len(truth_x)}")
                             try:
-                                new_xx, ynew, gnew = self.__interpolate(winner_x1, winner_x2, x1, x2, sim_modx, sim_mody, truth_x, truth_y, tol)
+                                new_xx, ynew, gnew = self.interpolate(winner_x1, winner_x2, x1, x2, sim_modx, sim_mody, truth_x, truth_y, tol)
                             except Exception as e:
                                 raise e
                             print(f"Length of x values for interpolation is {len(new_xx)}")
