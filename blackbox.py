@@ -1,17 +1,13 @@
 
 from abc import ABC, abstractmethod
-#from typing import *
 
 class BlackBox:
-    """Class docstrings go here.
-
-    """
 
     def __init__(self):
         self.name = "BlackBox"
 
     @abstractmethod
-    def setup(self):
+    def setup(self, should_rerun_epsc_copy=True, should_refit_exp_data=True):
         """ Set it up... """
         raise NotImplementedError
 
