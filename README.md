@@ -112,7 +112,7 @@ system:
   # Delay jobs for processing of initial design points.
   should_delay_jobs: False
   cluster_mode: False
-  n_jobs: 2
+  n_jobs: 9
 
 infill:
   rerun_design_matrix: True
