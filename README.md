@@ -9,8 +9,8 @@ crystal plasticity model parameters.
 
 The application utilizes Python and R. There are packages that must be installed for each:
 
-### Requirements
-## Python 3.9
+## Requirements
+### Python 3.9
 Install Anaconda or Minconda, then setup an environment:
 ```
 conda install --name <env_name> python=3.9
