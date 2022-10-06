@@ -18,6 +18,7 @@ import traceback
 import asyncio
 import re
 import pickle
+import time
 
 def get_or_create_eventloop():
     try:
@@ -62,6 +63,7 @@ class InfillPipeline:
         self.__rerun_design_matrix = settings['rerun_design_matrix']
         self.__cluster_mode = cluster_mode
         self.__should_delay_jobs = should_delay_jobs
+        self.__pareto_out_file = settings['pareto_out_file'] if 'pareto_out_file' in settings else 'pareto_front.csv'
         if blackbox == None:
             self.__blackbox = FakeBlackbox
         else:
@@ -439,14 +441,48 @@ class InfillPipeline:
                 if (dat_count > 0):
                     self.__data_store.delete_all(sqlite_file)
             
-            # Create the table and insert 
+            # Create the table and insert the initial design
             self.__data_store.insert_design_init(sqlite_file, design_init_df)
 
-        # All the action starts here...
+        # The action starts here...
+        # Evaluate the objective function(s) for each design point
         self.eval_obj_fun_on_design()
 
-        # Finally, start sequential infilling process
+        # Finally, start the budgeted sequential infilling process
         self.perform_infilling()
+
+        time.sleep(10)
+
+        # Rescale the pareto front that got generated
+        pareto_df = pd.read_csv(os.path.join(self.__run_folder, self.__pareto_out_file))
+        
+        new_columns = []
+        for j in range(len(self.__lower)):
+            new_columns.append(f"X{j+1}")
+        new_df_of_dict = []
+        for _, row in pareto_df.iterrows():
+            if type(row) is pd.core.series.Series:
+                row_as_list = row.tolist()
+            elif type(row) is pd.DataFrame:
+                row_as_list = row.values.tolist()
+            else:
+                raise Exception("Unable to transform row.")
+
+            new_row = self.__blackbox.join_fixed_values_to_design(row_as_list)            
+            rescaled_row = self.__blackbox.rescale_design_to_cpm(new_row)
+        
+            new_dict = {}
+            for j in range(len(new_columns)):
+                col_name = new_columns[j]
+                new_dict[col_name] = rescaled_row[j]
+
+            new_df_of_dict.append(new_dict)
+
+        pareto_df = pd.DataFrame(new_df_of_dict)
+        pareto_df.columns = new_columns
+        # Write out the rescaled Pareto front
+        new_fname = f"final_{self.__pareto_out_file}"
+        pareto_df.to_csv(os.path.join(self.__run_folder, new_fname), header=True, index=False)
 
     def __str__(self):
         return f'InfillPipeline is named {self.name}'

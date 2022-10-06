@@ -1,7 +1,4 @@
 from liquid import Liquid
-import re
-import tempfile
-import os
 
 def filter_string_format(val, fmt):
     """ Liquid filter for formatting 
@@ -12,5 +9,4 @@ def filter_string_format(val, fmt):
     Returns:
         the formatted string
     """
-    res = fmt % (val)
-    return res
+    return fmt % (val)

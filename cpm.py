@@ -100,7 +100,6 @@ class CPM(BlackBox):
         # Copy the folder in parallel for speed
         results = Parallel(
             n_jobs=utility.get_n_jobs(), backend="threading")(map(delayed(copy_runs), range(2, row_count+1)))
-
     
     def join_fixed_values_to_design(self, design):
         """ Join fixed values to the design if there any.
@@ -126,9 +125,10 @@ class CPM(BlackBox):
         
         return new_design
 
-    def rescale_design_to_cpm(self, full_design):
+    def rescale_design_to_cpm(self, full_design, fixed_values=None):
         c_design = copy.deepcopy(full_design)
-        fixed_values = utility.fixed_bound(self._lower, self._upper)
+        if not fixed_values:
+            fixed_values = utility.fixed_bound(self._lower, self._upper)
 
         for j in range(0, len(c_design)):
             if j in fixed_values:

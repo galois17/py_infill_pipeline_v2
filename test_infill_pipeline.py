@@ -3,7 +3,6 @@ from infill_pipeline import *
 import config
 import yaml
 
-
 class TestInfillPipeline(unittest.TestCase):
 
     def test_instance(self):

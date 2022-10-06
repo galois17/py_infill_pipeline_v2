@@ -1,13 +1,14 @@
 import subprocess
 import utility
 import os
-import time
 import progressbar
 from subprocess import Popen, PIPE, CalledProcessError
 import config
 import re
 
 def setup_design():
+    """ Setup the initial design"""
+
     utility.log_r("\nSetting up design matrix\n")
     new_env = os.environ.copy()
     new_env["CONFIG_FILE"] = utility.get_config_file()
@@ -24,7 +25,6 @@ def perform_infilling(budget=None, cluster_mode=False):
     max_bar_val = 50
     if budget is not None:
         max_bar_val = budget
-
 
     if not cluster_mode:
         bar_infilling = progressbar.ProgressBar(max_value=max_bar_val, 

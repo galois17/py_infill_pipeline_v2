@@ -10,7 +10,6 @@ from dataclasses import dataclass
 import pandas as pd
 import numpy as np
 from cmath import inf
-import similaritymeasures as sm
 import impl.cpm_DP780
 
 current = os.path.dirname(os.path.realpath(__file__))

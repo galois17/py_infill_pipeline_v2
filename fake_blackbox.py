@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-#from this import d
-#from typing import *
 from blackbox import BlackBox;
 
 class FakeBlackbox(BlackBox):

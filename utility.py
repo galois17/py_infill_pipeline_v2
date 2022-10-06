@@ -10,6 +10,7 @@ from pyfiglet import Figlet
 import time
 import random
 from pathlib import Path
+import math
 
 # Generate a RUN_ID to identify this run
 def generate_run_id(cur_datetime):
@@ -104,7 +105,7 @@ def fixed_bound(lower, upper):
     """ Get fixed values in the bounds """
     idx = []
     for j in range(0, len(lower)):
-        if lower[j] == upper[j]:
+        if math.isclose(lower[j], upper[j], rel_tol=1e-8):
             idx.append(j)
     return idx
 
