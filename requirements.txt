@@ -13,7 +13,6 @@ numpy==1.22.3
 olefile==0.46
 packaging==21.3
 pandas==1.4.3
-pip==22.1.2
 progressbar==2.5
 progressbar2==3.55.0
 pyfiglet==0.8.post1
