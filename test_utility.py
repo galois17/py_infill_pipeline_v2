@@ -13,14 +13,13 @@ class TestUtility(unittest.TestCase):
     def test_run_id(self):
         id = utility.generate_run_id(datetime.datetime.today().strftime('%Y%m%d_%H%M%S'))
         print(id)
-        result = re.match('^ID_\d+_\d+', id)
+        result = re.match(r"^ID_\d+_\d+", id)
         self.assertTrue(result)
 
     def test_smooth(self):
         t = linspace(-4,4,100)
         x = sin(t)
         xn = x + random.randn(len(t))*0.1
-        #y = utility.smooth(x, window_len=5, window='flat')
         y = utility.smooth(x, 3)
         print(f"lengths {len(x)} and {len(y)}")
         print(x)

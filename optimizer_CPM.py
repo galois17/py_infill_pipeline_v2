@@ -166,7 +166,7 @@ class OptimizerCPM:
         tol = 0.01
         track_x = 0
         for break_j in segmentation:
-            print("*************************************************************")
+            print("**************************")
             print(f"Segmentation {break_j}")
             print(f"Curent tracking at {track_x}; max length {len(sim_modx)}")
             x1 = int(break_j[0])
@@ -218,12 +218,12 @@ class OptimizerCPM:
                             all_x1.pop(-1)
                             should_quit_current_segment = True
                             print("!! DID NOT FIND interval !! ")
-                            print("*************************************************************")
+                            print("**************************")
                             break
                         else:
                             found_interval = True
                             print(f"Found complete interval: {all_x1}, {all_x2}")
-                            print("*************************************************************")
+                            print("**************************")
                             break
 
             winner_x1 = -1
