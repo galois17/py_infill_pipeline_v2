@@ -160,7 +160,7 @@ cpm:
 ```
 
 ### Results
-The pareto front can be found in /path/to/experiments/folder/pareto_front.csv.
+The pareto front can be found in /path/to/experiments/folder/final_pareto_front.csv.
 
 ## How to run unit tests
 ```
