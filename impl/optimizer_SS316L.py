@@ -129,7 +129,6 @@ class OptimizerSS316L(OptimizerCPM):
 
         for j in range(0, len(data_files)):
             out = impl.cpm_SS316L.CPMSS316L.read_from_vps_cout(os.path.join(self._run_folder, data_files[j]))
-            print(f"The shape is {out.shape}")
             X[j] = out[:, 0]
             # experimental curve y data
             cur_exp_y = out[:, 1]
