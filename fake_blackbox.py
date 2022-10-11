@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from blackbox import BlackBox;
+from blackbox import BlackBox
 
 class FakeBlackbox(BlackBox):
     def __init__(self):

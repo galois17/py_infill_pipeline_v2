@@ -1,36 +1,32 @@
 from abc import ABC, abstractmethod
-#from this import d
-#from typing import *
 import utility
-from joblib import Parallel, delayed
 import numpy as np
-from liquid import Liquid
-import pandas as pd
 import copy
-import multiprocessing as mp
 from blackbox import BlackBox
 
 class SimpleCase(BlackBox):
     def __init__(self, run_id, run_folder, lower, upper, settings):
         super().__init__()
+        self.name = "SimpleCase"
         self.__run_id = run_id
         self.__run_folder = run_folder
         self.__settings = settings
-        self.__lower = lower
-        self.__upper = upper
+        self._lower = lower
+        self._upper = upper
 
-    def setup(self):
+    def setup(self, should_rerun_epsc_copy=True, should_refit_exp_data=True):
         pass
 
-    def rescale_design(self, design):
+    def rescale_design_to_cpm(self, design):
         c_design = copy.deepcopy(design)
-        for j in range(0, len(c_design)):
-            l = self.__lower[j]
-            u = self.__upper[j]
+
+        for j in range(0, len(self._lower)):
+            l = self._lower[j]
+            u = self._upper[j]
             c_design[j] = utility.rescale_val(c_design[j], 0, 1, l, u)
         return c_design
 
-    def obj_fun(self, design, with_metadata=False, infill_id=None):
+    def obj_fun(self, design, is_initial_design_point, with_metadata=False, infill_id=None, rescale=True, num_jobs=-1, cluster_job_id=None):
         """ Objective function
         Args:
             design: A numpy series containing the design (1 row)
@@ -44,7 +40,7 @@ class SimpleCase(BlackBox):
             # Index and infill_id at loc 0 and 1            
             design = design[2:len(design)]
 
-        design = self.rescale_design(design)
+        design = self.rescale_design_to_cpm(design)
         x = design[0]
         y = design[1]
         r = np.sqrt(x*x + y*y) + eps
