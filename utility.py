@@ -4,8 +4,7 @@ import config
 import os
 import json
 import datetime
-import pandas as pd 
-import infill_pipeline
+import pandas as pd
 from pyfiglet import Figlet
 import time
 import random
@@ -97,9 +96,8 @@ def rename_design_init_df_inplace(df):
         'V14': 'X14', 'V15': 'X15'
     }, 
     inplace=True)
+    return df
 
-    infill_ids = df['infill_id']
-    infill_pipeline.InfillPipeline.set_infill_count(max(infill_ids))
 
 def fixed_bound(lower, upper):
     """ Get fixed values in the bounds """

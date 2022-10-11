@@ -343,7 +343,7 @@ class InfillPipeline:
                 
                 if self.__cluster_mode:
                     response, _ = self.__blackbox.obj_fun(row, True, with_metadata=True, infill_id=row["infill_id"], cluster_job_id=f"cluster_{row['infill_id']}")
-                else:
+                else:                    
                     response, _ = self.__blackbox.obj_fun(row, True, with_metadata=True, infill_id=row["infill_id"], cluster_job_id=None)
                 # Done, so mark the job as completed
                 self.__data_store.update_job_to_completed(os.path.join(self.__run_folder, self.__sqlite_file), row["infill_id"])
@@ -428,7 +428,9 @@ class InfillPipeline:
                 config.INFILL_TYPE_DESIGN] * self.__design_num_obs
 
             # Rename the headers on the pandas df
-            utility.rename_design_init_df_inplace(design_init_df)
+            design_init_df = utility.rename_design_init_df_inplace(design_init_df)
+            infill_ids = design_init_df['infill_id']
+            InfillPipeline.set_infill_count(max(infill_ids))
 
             # Append columns for responses
             for j in range(1, 20):

@@ -109,7 +109,8 @@ def main():
         print(f"\n\n\nVersion {config.__VERSION__}")
         return None
 
-    with open("config.yaml", 'r') as stream:
+    config_file = os.environ['CONFIG_FILE']
+    with open(config_file, 'r') as stream:
         config.data_loaded = yaml.safe_load(stream)
 
     # Plot and then exit
@@ -137,9 +138,12 @@ def main():
     ip = InfillPipeline(run_id, 
         config.data_loaded['simple']['lower'],
         config.data_loaded['simple']['upper'],
+        config.data_loaded['simple']['pickle_folder'],
         config.data_loaded['system']['run_folder'],
         config.data_loaded['system']['sqlite_db'],
         config.data_loaded['infill'],
+        should_delay_jobs=config.data_loaded['system']['should_delay_jobs'],
+        cluster_mode=config.data_loaded['system']['cluster_mode'],
         blackbox=bb
         )
     print(ip.__repr__())
