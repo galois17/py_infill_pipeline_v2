@@ -129,7 +129,6 @@ class OptimizerSS316L(OptimizerCPM):
 
         for j in range(0, len(data_files)):
             out = impl.cpm_SS316L.CPMSS316L.read_from_vps_cout(os.path.join(self._run_folder, data_files[j]))
-            print(f"The shape is {out.shape}")
             X[j] = out[:, 0]
             # experimental curve y data
             cur_exp_y = out[:, 1]
@@ -163,26 +162,9 @@ class OptimizerSS316L(OptimizerCPM):
             An np array
         """
         errors = [0]*cases.shape[0]
-        vf_curve = [0]*4
 
         fitting_weight = cases.loc[:, 'FittingWeight']
         fitting_weight = fitting_weight.to_list()
-
-        fit_range_rows = cases.loc[:, ['Start', 'End']]
-        # list of list or list of ranges
-        fit_range = fit_range_rows.values.tolist()
-
-        output_filename_rows = cases.loc[:, 'SimOut']
-        output_filenames = output_filename_rows.to_list()
-
-        col_x_rows = cases.loc[:, 'Column_x']
-        col_x = col_x_rows.to_list()
-
-        col_y_row = cases.loc[:, 'Column_y']
-        col_y = col_y_row.to_list()
-
-        data_files_row = cases.loc[:, 'FilePath']
-        data_files = data_files_row.to_list()
 
         if self.exp_data is None:
             self.setup_exp_data()
@@ -218,10 +200,7 @@ class OptimizerSS316L(OptimizerCPM):
             assert (sim_modx.dtype.char in np.typecodes['AllFloat']), f"sim_modx needs to be a float type, instead it's a {sim_modx.dtype}"
             assert (sim_mody.dtype.char in np.typecodes['AllFloat']), f"sim_mody needs to be a float type, instead it's a {sim_mody.dtype}"
             assert (exp_x.dtype.char in np.typecodes['AllFloat']), f"exp_x needs to be a float type, instead it's a {exp_x.dtype}"
-            #assert (exp_y_fcn.dtype.char in np.typecodes['AllFloat']), f"exp_y_fcn needs to be a float type, instead it's a {exp_y_fcn.dtype}"
 
-            is_vf = (j >= cases.shape[0])
-        
             err, _ = self.calc_error_piece_wise(exp_x, exp_y_fcn, sim_modx, sim_mody, None)
             
             errors[j] = err
