@@ -45,5 +45,6 @@ class SimpleCase(BlackBox):
         y = design[1]
         r = np.sqrt(x*x + y*y) + eps
         z = -1*np.sin(r)/r
+        
         print(f"({x}, {y}) => {z}")
         return [z], responses_dict

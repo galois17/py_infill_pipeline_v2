@@ -24,12 +24,13 @@ if (is.null(config$infill$r_ref_point)) {
 NUM_PARAMS = config$infill$design_num_of_param
 INFILL_OUT_FILE = config$infill$infill_out_file
 
-#MAX_WAIT_ROUND = 200
 MAX_WAIT_ROUND = 100
 LOCK_FILE = config$infill$infill_lock_file
 
+R_LOG_FILE = paste0(run_folder, '/', log_r_file)
+
 mesg = sprintf("config_file is %s, number_of_params %s", config, NUM_PARAMS) 
-write(mesg, file=paste0(run_folder, '/', log_r_file), append=TRUE)
+write(mesg, file=R_LOG_FILE, append=TRUE)
 
 obj_fun = function(x) {
     # Dispatches to actual objective fun.
@@ -41,10 +42,10 @@ obj_fun = function(x) {
     #   x: design point as numerical vector
     on.exit(closeAllConnections())
 
-    write('Eval obj function: ', file=paste0(run_folder, '/', log_r_file), append=TRUE)
-    write(as.character(x), file=paste0(run_folder, '/', log_r_file), append=TRUE)
-    write(class(x), file=paste0(run_folder, '/', log_r_file), append=TRUE)
-    write(INFILL_OUT_FILE, file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write('Eval obj function: ', file=R_LOG_FILE, append=TRUE)
+    write(as.character(x), file=R_LOG_FILE, append=TRUE)
+    write(class(x), file=R_LOG_FILE, append=TRUE)
+    write(INFILL_OUT_FILE, file=R_LOG_FILE, append=TRUE)
 
     # Write out infill point to csv
     out_infill_point = c(x, rep(NA, NUM_CASES))
@@ -55,7 +56,7 @@ obj_fun = function(x) {
 
     md5_out_orig = as.character(md5(file(paste0(run_folder, '/', INFILL_OUT_FILE), open = "rb")))
 
-    write('Sleeping...', file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write('Sleeping...', file=R_LOG_FILE, append=TRUE)
     Sys.sleep(3)
     stuck_lock_count = 0
     stuck_md5_count = 0
@@ -68,7 +69,7 @@ obj_fun = function(x) {
             if (stuck_lock_count >= MAX_WAIT_ROUND) {
                 break
             }
-            write(sprintf("File lock %s exists. Waiting for it to get processed...\n", LOCK_FILE), file=paste0(run_folder, '/', log_r_file), append=TRUE)
+            write(sprintf("File lock %s exists. Waiting for it to get processed...\n", LOCK_FILE), file=R_LOG_FILE, append=TRUE)
             Sys.sleep(2)
             stuck_lock_count = stuck_lock_count + 1
         } else {
@@ -86,32 +87,32 @@ obj_fun = function(x) {
     }
 
     # The lock doesn't exist anymore, so the response must be in the CSV file
-    write('A new infill point will be generated soon.', file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write('A new infill point will be generated soon.', file=R_LOG_FILE, append=TRUE)
     while (TRUE) {
         new_out_df = read.csv(paste0(run_folder, '/', INFILL_OUT_FILE), header=FALSE, skip=1)
         responses = new_out_df[, (NUM_PARAMS+1):ncol(new_out_df)]
         
         if (!is.na(responses[1])) {
-                write(class(responses[1]), file=paste0(run_folder, '/', log_r_file), append=TRUE)
+                write(class(responses[1]), file=R_LOG_FILE, append=TRUE)
             
                 text = sprintf("Type of response is %s", as.character(responses[1]))
-                write(text, file=paste0(run_folder, '/', log_r_file), append=TRUE)
+                write(text, file=R_LOG_FILE, append=TRUE)
                 break            
         }
         Sys.sleep(2)
     }
 
     print(responses)
-    write(as.character(responses), file=paste0(run_folder, '/', log_r_file), append=TRUE)
-    write(class(responses), file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write(as.character(responses), file=R_LOG_FILE, append=TRUE)
+    write(class(responses), file=R_LOG_FILE, append=TRUE)
 
     responses = data.matrix(responses)
     return(responses)
 }
 
-write("NUM_CASES: ", file=paste0(run_folder, '/', log_r_file), append=TRUE)
-write(class(NUM_CASES), file=paste0(run_folder, '/', log_r_file), append=TRUE)
-write(NUM_CASES, file=paste0(run_folder, '/', log_r_file), append=TRUE)
+write("NUM_CASES: ", file=R_LOG_FILE, append=TRUE)
+write(class(NUM_CASES), file=R_LOG_FILE, append=TRUE)
+write(NUM_CASES, file=R_LOG_FILE, append=TRUE)
 
 if (NUM_CASES == 1) {
     # With only one response, we cannot use GPareto
@@ -122,16 +123,16 @@ if (NUM_CASES == 1) {
     write.csv(pso_optimized_dat, paste0(run_folder, '/', 'pareto_front.csv'), quote=FALSE, row.names=FALSE)
 } else {
     design_init_file = config$infill$r_design_init_out_file
-    write("(R subsystem) Reading in design init csv file and run OBJ FUN", file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write("(R subsystem) Reading in design init csv file and run OBJ FUN", file=R_LOG_FILE, append=TRUE)
     design_init = read.csv(paste0(run_folder, '/', design_init_file))
     design_init = design_init[,-1]
 
-    write(dim(design_init), file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write(dim(design_init), file=R_LOG_FILE, append=TRUE)
     design_init_response_file = config$infill$r_design_init_response_out_file
-    write("(R subsystem) Reading in design init responses csv file and run OBJ FUN", file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write("(R subsystem) Reading in design init responses csv file and run OBJ FUN", file=R_LOG_FILE, append=TRUE)
     design_init_reponses = read.csv(paste0(run_folder, '/', design_init_response_file), header = FALSE, skip = 1)
-    write(dim(design_init_reponses), file=paste0(run_folder, '/', log_r_file), append=TRUE)
-    write(as.character(design_init_reponses), file=paste0(run_folder, '/', log_r_file), append=TRUE)
+    write(dim(design_init_reponses), file=R_LOG_FILE, append=TRUE)
+    write(as.character(design_init_reponses), file=R_LOG_FILE, append=TRUE)
 
     if (nrow(design_init) != nrow(design_init_reponses)) {
         stop(sprintf("The design has %d rows, but there are %d responses. Try to rerun the design matrix", nrow(design_init), nrow(design_init_reponses)))
@@ -151,4 +152,4 @@ if (NUM_CASES == 1) {
     # Save the surrogate model
     save(gp_pso, file=paste0(run_folder, '/', 'surrogate_model.RData'))
 }
-write("(R subsystem) Infilling is complete.\n", file=paste0(run_folder, '/', log_r_file), append=TRUE)
+write("(R subsystem) Infilling is complete.\n", file=R_LOG_FILE, append=TRUE)

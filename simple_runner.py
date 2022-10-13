@@ -52,6 +52,9 @@ def plot():
     p_x2 = df.iloc[0,1]
     p_y = df.iloc[0,2]
 
+    p_x1 = utility.rescale_val(p_x1, 0, 1, lower[0], upper[0])
+    p_x2 = utility.rescale_val(p_x2, 0, 1, lower[0], upper[0])
+
     ds = DataStore()
     df = ds.get_all_infill(path_to_db)
     print(df)
