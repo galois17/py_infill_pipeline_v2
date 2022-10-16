@@ -152,10 +152,7 @@ class InfillPipeline:
                         response = None
                         if self.__cluster_mode:
                             self.__data_store.insert_new_infilling_job(os.path.join(self.__run_folder, self.__sqlite_file), design_as_dict["infill_id"])
-                            # design is a a numpy series containing the design (1 row)
-                            #full_design = self.join_fixed_values_to_design(design)
-                            #full_design = self.rescale_design_to_cpm(full_design)  
-                            # 
+                            # Design is a numpy series containing the design (1 row)
 
                             # Launch a slurm task 
                             slurm_runner = SlurmRunner(os.path.join(self.__run_folder, self.__sqlite_file), utility.get_config_file())  
@@ -356,6 +353,7 @@ class InfillPipeline:
                 response_as_dict["infill_id"] = row[1]
                 
                 assert (response is not None), "response must not be null"
+                
                 for j in range(0, len(response)):
                     response_as_dict[f"Y{j+1}"] = response[j]
                 

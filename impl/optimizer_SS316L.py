@@ -214,20 +214,19 @@ class OptimizerSS316L(OptimizerCPM):
                 enum_sim_vf = np.zeros((num_data,1))
                 x = np.array([])
                 
+                target_vf_comp = np.zeros((num_data,1))
                 for kk in range(0, len(sim_modx)):
                     if sim_modx[kk] >= target_strain:
                         x = np.append(x, sim_modx[kk])
                         enum_sim_vf[err_ind] = sim_VF[kk]
+                        target_vf_comp[err_ind] = float(target_vf.values[err_ind])
+
                         err_ind += 1
                         if err_ind >= num_data:
                             break
                         target_strain = vf_exp[j-5].iloc[err_ind, 0]
-                    else:
-                        x = sim_modx
-                
-                target_vf = target_vf.values.reshape((len(target_vf),1))
-                
-                errors[j+4] = np.sqrt(np.sum(np.square(enum_sim_vf - target_vf))/len(enum_sim_vf))
+
+                errors[j+4] = np.sqrt(np.sum(np.square(enum_sim_vf - target_vf_comp))/len(enum_sim_vf))
         return errors
 
     def calc_error_piece_wise(self, exp_x, exp_fcn, sim_modx, sim_mody, segmentation):
