@@ -4,12 +4,13 @@ import traceback
 import os
 import pandas as pd
 import numpy as np
-import cpm
 import scipy
 from scipy.optimize import curve_fit
 from scipy import power, arange, random, nan, interpolate
 from scipy.interpolate import UnivariateSpline
 from dataclasses import dataclass
+
+from infill_pipeline.cpm import CPM
 
 class OptimizerCPM:
     """ Base CPM optimizer """
@@ -33,10 +34,9 @@ class OptimizerCPM:
             num = row['CaseNo']
 
             full_f = os.path.join(self._run_folder, f)
-            m[num] = cpm.CPM.read_from_vps_cout(full_f)
+            m[num] = CPM.read_from_vps_cout(full_f)
 
         return m
-
 
     def parse_info(self, info, cases):
         """ Port of readInfoFile(...) from Matlab 

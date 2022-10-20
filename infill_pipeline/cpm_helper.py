@@ -1,6 +1,5 @@
 import subprocess
 
-
 class CPMHelper:
     """ Helper class to run EPSC executables
     """

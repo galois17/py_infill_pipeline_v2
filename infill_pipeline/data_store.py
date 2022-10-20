@@ -1,10 +1,10 @@
 import sqlite3
 from sqlite3 import Error
 import pandas as pd
-import config
-from infill_error import InfillError
 import copy
-import utility
+from infill_pipeline.infill_error import InfillError
+import infill_pipeline.utility as utility
+import infill_pipeline.config as config
 
 class DataStore:
     """ DataStore 

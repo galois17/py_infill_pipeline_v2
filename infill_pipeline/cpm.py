@@ -1,7 +1,4 @@
-
 from abc import ABC, abstractmethod
-#from this import d
-#from typing import *
 import numpy as np
 import re
 import os
@@ -19,10 +16,10 @@ import subprocess
 import sys
 import random
 
-from blackbox import BlackBox
-import utility
-import config
-import liquid_template_helper
+from infill_pipeline.blackbox import BlackBox
+import infill_pipeline.utility as utility
+import infill_pipeline.config as config
+import infill_pipeline.liquid_template_helper as liquid_template_helper
 
 class CPM(BlackBox):
     def __init__(self, run_id, run_folder, design_csv_file, design_number_of_obs, selected_cases, case_ids, subprocess_timeout, settings, optim):

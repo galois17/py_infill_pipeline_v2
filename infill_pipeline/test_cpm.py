@@ -1,8 +1,9 @@
 import unittest
-from cpm import CPM
-import config
 import yaml
-from impl.optimizer_SS316L import OptimizerSS316L
+
+from infill_pipeline.impl.optimizer_SS316L import OptimizerSS316L
+from infill_pipeline.cpm import CPM
+import infill_pipeline.config as config
 
 class TestCPM(unittest.TestCase):
     def setup(self, optim=None):

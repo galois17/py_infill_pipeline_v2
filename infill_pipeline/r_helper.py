@@ -1,10 +1,11 @@
 import subprocess
-import utility
 import os
 import progressbar
 from subprocess import Popen, PIPE, CalledProcessError
-import config
 import re
+
+import infill_pipeline.config as config
+import infill_pipeline.utility as utility
 
 def setup_design():
     """ Setup the initial design"""
@@ -12,7 +13,7 @@ def setup_design():
     utility.log_r("\nSetting up design matrix\n")
     new_env = os.environ.copy()
     new_env["CONFIG_FILE"] = utility.get_config_file()
-    result = subprocess.run(["Rscript", "r_source/setup_design.R"], capture_output=True,  text=True, env=new_env)
+    result = subprocess.run(["Rscript", "infill_pipeline/r_source/setup_design.R"], capture_output=True,  text=True, env=new_env)
     print(result.stdout, flush=True)
     print(result.stderr)
 
@@ -31,7 +32,7 @@ def perform_infilling(budget=None, cluster_mode=False):
                                 widgets=config.widgets).start()
     new_env = os.environ.copy()
     new_env["CONFIG_FILE"] = utility.get_config_file()
-    with Popen(["Rscript", "r_source/perform_infilling.R"], stdout=PIPE, bufsize=1, universal_newlines=True, env=new_env) as p:
+    with Popen(["Rscript", "infill_pipeline/r_source/perform_infilling.R"], stdout=PIPE, bufsize=1, universal_newlines=True, env=new_env) as p:
         for line in p.stdout:
             result = regex.search(line)
             if result:

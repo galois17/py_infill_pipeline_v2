@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-import utility
 import numpy as np
 import copy
-from blackbox import BlackBox
+
+from infill_pipeline.blackbox import BlackBox
+import infill_pipeline.utility as utility
 
 class SimpleCase(BlackBox):
     def __init__(self, run_id, run_folder, lower, upper, settings):

@@ -3,11 +3,7 @@ import sys
 from abc import ABC, abstractmethod
 from joblib import delayed
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
-
-from cpm import CPM
+from infill_pipeline.cpm import CPM
 
 class CPMDP780(CPM):
     """ DP780 Experiment """

@@ -1,15 +1,15 @@
 import unittest
-from infill_pipeline import *
-import config
 import yaml
 import os
 import sqlite3
 from sqlite3 import Error
-import infill_pipeline
-from infill_error import InfillError
 import pandas as pd
 import numpy as np
 
+from infill_pipeline.infill_pipeline import InfillPipeline
+import infill_pipeline.config as config
+from infill_pipeline.infill_error import InfillError
+from infill_pipeline.data_store import DataStore
 
 class TestDataStore(unittest.TestCase):
 

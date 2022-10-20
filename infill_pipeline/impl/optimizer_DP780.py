@@ -10,15 +10,11 @@ from dataclasses import dataclass
 import pandas as pd
 import numpy as np
 from cmath import inf
-import impl.cpm_DP780
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
-
-import config
-import utility
-from optimizer_CPM import OptimizerCPM
+from infill_pipeline.impl.cpm_DP780 import CPMDP780
+import infill_pipeline.config as config
+import infill_pipeline.utility as utility
+from infill_pipeline.optimizer_CPM import OptimizerCPM
 
 class OptimizerDP780(OptimizerCPM):
     """ Optimizer for DP780
@@ -126,7 +122,7 @@ class OptimizerDP780(OptimizerCPM):
         segmentations = [None]*len(data_files)
 
         for j in range(0, len(data_files)):
-            out = impl.cpm_DP780.CPMDP780.read_from_vps_cout(os.path.join(self._run_folder, data_files[j]))
+            out = CPMDP780.read_from_vps_cout(os.path.join(self._run_folder, data_files[j]))
             
             # Experimental curve x data
             X[j] = np.copy(out[:, 0])
@@ -144,7 +140,7 @@ class OptimizerDP780(OptimizerCPM):
                 seg_file = f"{seg_file}.in"
                 full_path_seg_file = os.path.join(self._run_folder, "FittingDataFiles", seg_file)
 
-                out_segmentation = impl.cpm_DP780.CPMDP780.read_from_vps_cout(full_path_seg_file)
+                out_segmentation = CPMDP780.read_from_vps_cout(full_path_seg_file)
                 segmentations[j] = out_segmentation
             else:
                 segmentations[j] = None
@@ -169,29 +165,20 @@ class OptimizerDP780(OptimizerCPM):
 
     def error_eval_wrap(self, cases, sim_data_dict):
         """ Error wrap 
+        Args:
+            cases: a dataframe of the cases read from Inp_WhatToFit_DP.csv.
+            sim_data_dict: a dictionary of the simulation data keyed by the case as a string.
+
         Returns:
-            An np array
+            An np array with the errors for each case.
+
+        Raises:
+            Exception if any error could not be evaluated for any case.
         """
         errors = [0]*cases.shape[0]
 
         fitting_weight = cases.loc[:, 'FittingWeight']
         fitting_weight = fitting_weight.to_list()
-
-        fit_range_rows = cases.loc[:, ['Start', 'End']]
-        # list of list or list of ranges
-        fit_range = fit_range_rows.values.tolist()
-
-        output_filename_rows = cases.loc[:, 'SimOut']
-        output_filenames = output_filename_rows.to_list()
-
-        col_x_rows = cases.loc[:, 'Column_x']
-        col_x = col_x_rows.to_list()
-
-        col_y_row = cases.loc[:, 'Column_y']
-        col_y = col_y_row.to_list()
-
-        data_files_row = cases.loc[:, 'FilePath']
-        data_files = data_files_row.to_list()
 
         if self.exp_data is None:
             self.setup_exp_data()
@@ -200,8 +187,6 @@ class OptimizerDP780(OptimizerCPM):
         for j in range(0, cases.shape[0]):
             exp_x = self.exp_data['X'][j]
             exp_y = self.exp_data['smoothed_Y'][j]
-            #cur_fitting_weight = fitting_weight[j]
-            cur_fit_range = fit_range[j]
             exp_y_fcn = self.exp_data['raw_Y'][j]            
             segmentation = self.exp_data['segmentations'][j]
 

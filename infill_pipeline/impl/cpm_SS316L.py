@@ -3,11 +3,7 @@ import os
 import sys
 from joblib import delayed
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
-
-from cpm import CPM
+from infill_pipeline.cpm import CPM
 
 class CPMSS316L(CPM):
     """ SS316L Experiment """

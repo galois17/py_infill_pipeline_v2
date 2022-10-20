@@ -2,7 +2,6 @@ from cmath import inf
 import os
 import pandas as pd
 import numpy as np
-import impl.cpm_SS316L
 import scipy
 from dataclasses import dataclass
 from scipy.optimize import curve_fit
@@ -11,13 +10,11 @@ from dataclasses import dataclass
 import yaml
 import pickle
 import sys
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
 
-import config
-import utility
-from optimizer_CPM import OptimizerCPM
+from infill_pipeline.impl.cpm_SS316L import CPMSS316L
+import infill_pipeline.config as config
+import infill_pipeline.utility as utility
+from infill_pipeline.optimizer_CPM import OptimizerCPM
 
 class OptimizerSS316L(OptimizerCPM):
     def __init__(self, run_folder, case_fname, fit_param_fname, recipe_fname, info_fname):
@@ -128,7 +125,7 @@ class OptimizerSS316L(OptimizerCPM):
         raw_Y =  [None]*len(data_files)
 
         for j in range(0, len(data_files)):
-            out = impl.cpm_SS316L.CPMSS316L.read_from_vps_cout(os.path.join(self._run_folder, data_files[j]))
+            out = CPMSS316L.read_from_vps_cout(os.path.join(self._run_folder, data_files[j]))
             X[j] = out[:, 0]
             # experimental curve y data
             cur_exp_y = out[:, 1]
@@ -158,8 +155,15 @@ class OptimizerSS316L(OptimizerCPM):
 
     def error_eval_wrap(self, cases, sim_data_dict):
         """ Error wrap 
+        Args:
+            cases: a dataframe of the cases read from Inp_WhatToFit_PT.csv.
+            sim_data_dict: a dictionary of the simulation data keyed by the case as a string.
+            
         Returns:
-            An np array
+            An np array with the errors for each case.
+
+        Raises:
+            Exception if any error could not be evaluated for any case.
         """
         errors = [0]*cases.shape[0]
 
@@ -190,7 +194,7 @@ class OptimizerSS316L(OptimizerCPM):
             sim_data = sim_data_dict[str(case_no)]
 
             if sim_data is None:
-                errors[j] = 1000
+                errors[j] = 2000+np.random.normal(0, 100)
                 continue
 
             sim_modx = sim_data[:,0]
@@ -226,7 +230,7 @@ class OptimizerSS316L(OptimizerCPM):
                             break
                         target_strain = vf_exp[j-5].iloc[err_ind, 0]
 
-                errors[j+4] = np.sqrt(np.sum(np.square(enum_sim_vf - target_vf_comp))/len(enum_sim_vf))
+                errors[j+4] = 2000*np.sqrt(np.sum(np.square(enum_sim_vf - target_vf_comp))/len(enum_sim_vf))
         return errors
 
     def calc_error_piece_wise(self, exp_x, exp_fcn, sim_modx, sim_mody, segmentation):

@@ -1,12 +1,15 @@
 import unittest
 from unittest import mock
-from impl.cpm_SS316L import *
-import config
 import yaml
 import tempfile
 import pandas as pd
-from impl.optimizer_SS316L import OptimizerSS316L
 from unittest.mock import Mock 
+import os
+
+from infill_pipeline.impl.optimizer_SS316L import OptimizerSS316L
+from infill_pipeline.cpm import CPM
+from infill_pipeline.impl.cpm_SS316L import CPMSS316L
+import infill_pipeline.config as config
 
 class TestCPMSS316L(unittest.TestCase):
     def setup(self, optim=None):
@@ -80,7 +83,7 @@ class TestCPMSS316L(unittest.TestCase):
             )
         self.setup(optim)
         
-        with mock.patch('cpm.shutil.copytree', return_value='') as ff:
+        with mock.patch('infill_pipeline.cpm.shutil.copytree', return_value='') as ff:
             # Partial mock
             self.inst.setup(should_rerun_epsc_copy=True)
             ff.assert_called()

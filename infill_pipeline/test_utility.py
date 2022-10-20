@@ -1,5 +1,4 @@
 import unittest
-import utility
 import re
 import datetime
 import os
@@ -7,6 +6,8 @@ from numpy import *
 from unittest.mock import Mock
 from unittest import mock
 import tempfile
+
+import infill_pipeline.utility as utility
 
 class TestUtility(unittest.TestCase):
     #@unittest.skip("demonstrating skipping")

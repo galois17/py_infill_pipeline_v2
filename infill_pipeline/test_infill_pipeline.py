@@ -1,7 +1,8 @@
 import unittest
-from infill_pipeline import *
-import config
 import yaml
+
+import infill_pipeline.config as config
+from infill_pipeline.infill_pipeline import InfillPipeline
 
 class TestInfillPipeline(unittest.TestCase):
 

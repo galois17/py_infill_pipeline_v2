@@ -1,4 +1,3 @@
-from liquid import Liquid
 
 def filter_string_format(val, fmt):
     """ Liquid filter for formatting 

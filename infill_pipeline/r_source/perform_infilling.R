@@ -1,4 +1,4 @@
-source('r_source/load_libs.R')
+source('infill_pipeline/r_source/load_libs.R')
 
 options(error=traceback)
 
@@ -13,7 +13,7 @@ BUDGET = config$infill$budget
 ALG = "pso"
 # Options are SMS or EHI
 METHOD = "SMS"
-MAXIT = 20
+MAXIT = 100
 
 if (is.null(config$infill$r_ref_point)) {
     R_REF_POINT = rep(0.1, NUM_CASES)

@@ -1,6 +1,5 @@
 from multiprocessing.util import is_exiting
 import numpy as np
-import config
 import os
 import json
 import datetime
@@ -10,6 +9,8 @@ import time
 import random
 from pathlib import Path
 import math
+
+import infill_pipeline.config as config
 
 # Generate a RUN_ID to identify this run
 def generate_run_id(cur_datetime):

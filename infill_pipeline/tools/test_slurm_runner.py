@@ -1,13 +1,14 @@
 import unittest
-import utility
 import re
 import datetime
 import os
 from numpy import *
 from unittest.mock import Mock
 from unittest import mock
-from slurm_runner import SlurmRunner
 import tempfile
+
+from infill_pipeline.tools.slurm_runner import SlurmRunner
+import infill_pipeline.utility as utility
 
 class TestSlurmRunner(unittest.TestCase):
     #with patch.object(ProductionClass, 'method', return_value=None) as mock_method:

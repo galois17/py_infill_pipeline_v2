@@ -1,13 +1,14 @@
 import unittest
 from unittest import mock
-from impl.cpm_DP780 import CPMDP780
-import config
 import yaml
 import tempfile
 import pandas as pd
-from impl.optimizer_DP780 import OptimizerDP780
 from unittest.mock import Mock 
-from cpm import CPM
+
+from infill_pipeline.impl.optimizer_DP780 import OptimizerDP780
+from infill_pipeline.cpm import CPM
+from infill_pipeline.impl.cpm_DP780 import CPMDP780
+import infill_pipeline.config as config
 
 class TestCPMDP780(unittest.TestCase):
     def setup(self, optim=None):
@@ -53,8 +54,8 @@ class TestCPMDP780(unittest.TestCase):
         optim.error_eval_wrap.assert_called_once()
         self.assertTrue(self.inst.write_out_dps_xfile_and_execute.call_count == 9)
 
-    @mock.patch("cpm.os")
-    @mock.patch("cpm.shutil")
+    @mock.patch("infill_pipeline.cpm.os")
+    @mock.patch("infill_pipeline.cpm.shutil")
     def test_setup(self, mock_os, mock_shutil):
         optim = OptimizerDP780(config.data_loaded['system']['run_folder'], 
             config.data_loaded['cpm']['case_fname'], config.data_loaded['cpm']['fit_param_fname'], config.data_loaded['cpm']['recipe_fname'], config.data_loaded['cpm']['info_fname']
@@ -70,7 +71,7 @@ class TestCPMDP780(unittest.TestCase):
             )
         self.setup(optim)
         
-        with mock.patch('cpm.shutil.copytree', return_value='') as ff:
+        with mock.patch('infill_pipeline.cpm.shutil.copytree', return_value='') as ff:
             # Partial mock
             self.inst.setup(should_rerun_epsc_copy=True)
             ff.assert_called()

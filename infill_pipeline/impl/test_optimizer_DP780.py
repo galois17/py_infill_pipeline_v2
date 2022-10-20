@@ -1,9 +1,10 @@
 import unittest
-from infill_pipeline import *
-import config
 import yaml
-from optimizer_DP780 import OptimizerDP780
 import pandas as pd
+
+from infill_pipeline.infill_pipeline import InfillPipeline
+import infill_pipeline.config as config
+from infill_pipeline.impl.optimizer_DP780 import OptimizerDP780
 
 class TestOptimizerDP780(unittest.TestCase):
     def setup(self):

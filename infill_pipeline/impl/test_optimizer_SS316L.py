@@ -1,9 +1,12 @@
 import unittest
-from infill_pipeline import *
-import config
 import yaml
-from optimizer_SS316L import OptimizerSS316L
 import pandas as pd
+import os
+import numpy as np
+
+from infill_pipeline.infill_pipeline import InfillPipeline
+import infill_pipeline.config as config
+from infill_pipeline.impl.optimizer_SS316L import OptimizerSS316L
 
 class TestOptimizerSS316L(unittest.TestCase):
     def setup(self):

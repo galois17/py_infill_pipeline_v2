@@ -1,7 +1,6 @@
-
 from abc import ABC, abstractmethod
 import copy
-import utility
+import infill_pipeline.utility as utility
 
 class BlackBox:
 

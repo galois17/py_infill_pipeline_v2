@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from blackbox import BlackBox
+
+from infill_pipeline.blackbox import BlackBox
 
 class FakeBlackbox(BlackBox):
     def __init__(self):
