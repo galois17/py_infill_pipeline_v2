@@ -1,23 +1,20 @@
-from impl.optimizer_DP780 import OptimizerDP780
 import threading
 import logging
 import progressbar
 import time
-from impl.cpm_DP780 import CPMDP780
 import datetime
-import utility
-from infill_error import InfillError
-import config
-from optparse import OptionParser
-from infill_pipeline import *
 import yaml
 from select import select
 import os
 import sys
+import pandas as pd
 
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-sys.path.append(parent)
+from infill_pipeline.impl.optimizer_DP780 import OptimizerDP780
+from infill_pipeline.impl.cpm_DP780 import CPMDP780
+import infill_pipeline.utility as utility
+from infill_pipeline.infill_error import InfillError
+import infill_pipeline.config as config
+from infill_pipeline.infill_pipeline import InfillPipeline
 
 progressbar.streams.wrap_stderr()
 logging.basicConfig()

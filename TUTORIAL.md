@@ -71,7 +71,6 @@ x=(-8, 8) and y=(-8, 8).
 system:
   should_run_batch: True
   rerun_batch: True
-  dry_run: False
   run_folder: '/Users/<User>/Documents/code/experiments_simple'
   log_r_file: 'log_r.txt'
   sqlite_db: 'sqlite.db'
@@ -146,7 +145,6 @@ Our implementation of Blackbox will be more involved than the earlier trivial ex
 system:
   should_run_batch: True
   rerun_batch: True
-  dry_run: False
   run_folder: '/Users/<User>/Documents/code/experiments_py_infill_pipeline'
   log_r_file: 'log_r.txt'
   sqlite_db: 'sqlite.db'
